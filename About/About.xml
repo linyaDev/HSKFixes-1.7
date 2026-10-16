@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>HSK Fixes 1.7</name>
+	<author>linya</author>
+	<packageId>linya.hskfixes17</packageId>
+	<supportedVersions>
+		<li>1.7</li>
+	</supportedVersions>
+	<description>Правки, которые нужны Hardcore SK и модам его состава именно на RimWorld 1.7. Код самого пака не меняется — всё делается снаружи.
+
+Что делает:
+
+• Поднимает Mod-класс Core SK. На 1.7 его конструктор падает на первой строке (нет UnityEngine.Application.SetStackTraceLogType), и пак остаётся без настроек и без своих патчей. Объект собирается вручную, до того как игра дойдёт до него, и патчи применяются классами по одному — один плохой класс не уносит остальные.
+
+• Подменяет патчи модов пака, которые Harmony на 1.7 отвергает из-за несовместимого типа __instance: Survival Tools Lite, Minerals, Skynet. Логика подмен совпадает с оригиналом, цель — чтобы патч встал. Без этого мод теряет весь остаток своего списка патчей, а Skynet вдобавок сыпал тысячами строк на каждую пешку.
+
+• Объявляет два типа, которые пак называет в дефах, но которых нет ни в одной версии Combat Extended и в ванилле: CompProperties_Smoke и SmokeInhalationImmuneExtension. Без них деф не загружается целиком.
+
+Не путать с Patch Transition: тот закрывает отсутствие чужих модов (CE, Rimatomics, Dubs Bad Hygiene, Rimefeller), а этот — поломки на новой версии игры. Моды независимы и могут работать вместе.</description>
+	<modDependencies>
+		<li>
+			<packageId>brrainz.harmony</packageId>
+			<displayName>Harmony</displayName>
+			<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+		</li>
+	</modDependencies>
+	<loadAfter>
+		<li>brrainz.harmony</li>
+		<li>Ludeon.RimWorld</li>
+		<li>CETeam.CombatExtended</li>
+	</loadAfter>
+	<loadBefore>
+		<li>skyarkhangel.HSK</li>
+	</loadBefore>
+</ModMetaData>

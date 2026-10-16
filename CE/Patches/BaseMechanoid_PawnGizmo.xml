@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Снимает второй CombatExtended.CompPawnGizmo с BaseMechanoid.
+
+Ошибка в логе, по одной строке на каждого меха, который встретился в игре:
+
+    Mech_Cleansweeper has multiple CompPawnGizmo, duplicates has been deactivated.
+    Please report this to the patch provider of Biotech or CE team if the patch is integrated in CE.
+
+Откуда дубль. Компонент добавляют двое, и оба правы по-своему:
+
+    пак  Core_SK_CoreModule/Patches/Mods_CombatExtended/ThingDefs_Races/Races_Animal_Base.xml
+         вешает его на BasePawn — прародителя всех пешек
+    CE   Patches/Core/ThingDefs_Races/Races_Mechanoid.xml
+         вешает его на BaseMechanoid, который от BasePawn и наследуется
+
+Проверено по дампу итоговой базы дефов (мод Unified XML Export): в BaseMechanoid этот
+compClass стоит дважды — свой и унаследованный.
+
+Пак об этом знает. В том же своём файле у него лежит ровно та операция, что нужна, только
+закомментированная, с пояснением "Remove comp added by CE in BaseMechanoid. Mechanoids still
+inherit this Comp from BasePawn". Здесь она включена, и то пояснение и описывает последствие:
+мехи продолжают получать компонент от BasePawn, так что ничего не теряется — CE и сама
+отключает дубликат, просто сперва пишет об этом в лог.
+
+Проверено и то, что это не следствие нашего порта CE: в паковой копии CombatExtended та же
+операция добавления на месте, то есть дубль был и в обычной игре на 1.6.
+
+Почему PatchOperationConditional, а не просто Remove: без CE узла нет, и операция ругалась бы
+на ненайденный xpath. Условие проверяет сам узел, поэтому никакой привязки к packageId не
+нужно — и с заглушкой CE из Patch Transition, которая этого патча не ставит, тоже тихо.
+
+Порядок соблюдён: мод объявляет loadAfter CETeam.CombatExtended, значит наша операция идёт
+после добавления CE. Паковый add на BasePawn выполняется позже и нас не касается — он на
+другом дефе.
+-->
+<Patch>
+
+	<Operation Class="PatchOperationConditional">
+		<xpath>Defs/ThingDef[@Name="BaseMechanoid"]/comps/li[compClass="CombatExtended.CompPawnGizmo"]</xpath>
+		<match Class="PatchOperationRemove">
+			<xpath>Defs/ThingDef[@Name="BaseMechanoid"]/comps/li[compClass="CombatExtended.CompPawnGizmo"]</xpath>
+		</match>
+	</Operation>
+
+</Patch>

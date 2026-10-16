@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>HSKFixes17</AssemblyName>
+    <RootNamespace>HSKFixes17</RootNamespace>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>12.0</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- Условных папок здесь нет: мод целиком про 1.7, и его About ограничивает версию. -->
+    <OutputPath>..\..\Assemblies</OutputPath>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RimWorldPath Condition="'$(RimWorldPath)' == '' AND Exists('D:\RimWorld_HSK\RimWorldWin64_Data\Managed')">D:\RimWorld_HSK</RimWorldPath>
+    <RimWorldPath Condition="'$(RimWorldPath)' == ''">C:\Program Files (x86)\Steam\steamapps\common\RimWorld</RimWorldPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(RimWorldPath)\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(RimWorldPath)\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- GUI и GUIStyle живут здесь, а не в CoreModule. На 1.7 Unity нет вовсе, но ссылки на
+         UnityEngine.* перенаправляются в UnityStubs.dll — это прописано в RimWorld.runtimeconfig.json
+         ключом WaylithClr.AssemblyNameRedirects, — так что вызовы разрешаются. -->
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(RimWorldPath)\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- Harmony: и восстановление настроек, и подмена сломанных патчей ставятся патчами.
+         Берём ту, что лежит в игре: свою копию не кладём, иначе в памяти окажется две. -->
+    <Reference Include="0Harmony">
+      <HintPath>$(RimWorldPath)\Mods\Harmony\Current\Assemblies\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>
