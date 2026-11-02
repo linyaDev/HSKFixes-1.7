@@ -83,10 +83,11 @@ namespace HSKFixes17
         }
 
         private static void SwapBrokenPatches(MethodBase original, ref HarmonyMethod prefix,
-            ref HarmonyMethod postfix)
+            ref HarmonyMethod postfix, ref HarmonyMethod transpiler)
         {
             TrySwap(original, ref prefix);
             TrySwap(original, ref postfix);
+            TranspilerStackFix.TrySwap(original, ref transpiler);
         }
 
         private static void TrySwap(MethodBase original, ref HarmonyMethod patch)
