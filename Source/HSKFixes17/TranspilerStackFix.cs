@@ -33,11 +33,18 @@ namespace HSKFixes17
                 && original.DeclaringType?.FullName == "RimWorld.WorkGiver_ConstructDeliverResources"
                 && original.Name == "ResourceDeliverJobFor")
                 replacement = nameof(DeliverResources);
+            else if (method.DeclaringType?.FullName == "RWLayoutMod.MiscFixes"
+                && method.Name == "LoadPatches_transpiler"
+                && original.DeclaringType == typeof(ModContentPack)
+                && original.Name == "LoadPatches")
+                replacement = nameof(XmlPatchLoadFix.Transpiler);
             else
                 return;
 
             // Keep the registering mod's ordering constraints and priority.
-            patch = new HarmonyMethod(method: AccessTools.Method(typeof(TranspilerStackFix), replacement))
+            Type replacementType = replacement == nameof(XmlPatchLoadFix.Transpiler)
+                ? typeof(XmlPatchLoadFix) : typeof(TranspilerStackFix);
+            patch = new HarmonyMethod(method: AccessTools.Method(replacementType, replacement))
             {
                 priority = patch.priority,
                 before = patch.before,

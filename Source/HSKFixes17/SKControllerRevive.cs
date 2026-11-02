@@ -281,7 +281,8 @@ namespace HSKFixes17
 
                 try
                 {
-                    if (harmony.CreateClassProcessor(type).Patch() != null)
+                    if (MeleeHediffStackFix.TryApply(harmony, type)
+                        || harmony.CreateClassProcessor(type).Patch() != null)
                         applied++;
                 }
                 catch (Exception e)
