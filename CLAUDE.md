@@ -17,6 +17,9 @@ Hygiene, Rimefeller) своими заглушками. Этот — полом�
 | `SKSettingsRevive.cs` | нижний слой того же: если подъём не удался, хотя бы настройки пака |
 | `BrokenPatchFix.cs` | перехват `Harmony.Patch` для патчей с несовместимым `__instance` |
 | `PatchClassFix.cs` | то же для патчей, объявленных атрибутами и поставленных через `PatchAll` |
+| `TranspilerStackFix.cs` | подмена транспайлеров AlienRace, AssortedTweaks и RWLayout при регистрации |
+| `MeleeHediffStackFix.cs` | удаляет лишнюю загрузку DamageResult из транспайлера Core SK, сохраняя иммунитет |
+| `XmlPatchLoadFix.cs` | защита от повреждённых XML-патчей для нового LoadPatches вместо эталона IL 1.6 у RWLayout |
 | `STLWorkTagFix.cs`, `MineralsIceFix.cs`, `JoyPrefixFix.cs` | замены для патчей первого рода (STL, Minerals, Skynet, Androids) |
 | `AIRobotWorkTabFix.cs` | приоритеты роботов Misc Robots — **пока не работает**, см. ниже |
 | `ResearchTreeFix.cs` | дерево исследований стиралось при прокрутке: заглушка 1.7 теряет смещение в `GUIClip.Push` |
@@ -56,6 +59,12 @@ Hygiene, Rimefeller) своими заглушками. Этот — полом�
 `CompPawnGizmo` — причина у него не 1.7, а незакомментированная операция самого пака.
 
 ## Уроки, за которые заплачено
+
+**Сборка 1.7.** `D:\Mods\.tools\dotnet10\dotnet.exe build Source\HSKFixes17\HSKFixes17.csproj -c Release`
+из корня мода, только по явной просьбе. Проект — `net10.0`, API игры закреплён
+в `Krafs.Rimworld.Ref 1.7.4995-unstable`, Harmony 3 — из `Updated\Harmony\1.7`.
+Результат — `Assemblies\HSKFixes17.dll`. Локальные клиенты имеют отдельные копии
+в `Mods\HSKFixes17`, поэтому сборка сама по себе их не обновляет.
 
 **Mod-класс Core SK падает на первой строке.** Его конструктор начинается с
 `UnityEngine.Application.SetStackTraceLogType`, которого в новом движке нет. Падает — и дальше не
